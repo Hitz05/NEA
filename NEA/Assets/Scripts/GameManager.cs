@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public static bool canvOn;
 
     void Awake(){
-        timeFlow = 0;
+        timeFlow = 1;
     }
 
     // Update is called once per frame
