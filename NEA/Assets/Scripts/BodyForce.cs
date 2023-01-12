@@ -76,10 +76,10 @@ public class BodyForce : MonoBehaviour
     void getForce(){
         foreach(var otherBody in celestialBody){ //Loops as many times as bodies are in the system
             if(otherBody != this){
-                dist = (otherBody.rb.position - rb.position).sqrMagnitude;
-                forceDir = (otherBody.rb.position - rb.position).normalized;
+                dist = (otherBody.rb.position - rb.position).sqrMagnitude; //Gets distance between objects and squares it
+                forceDir = (otherBody.rb.position - rb.position).normalized;//Gets the direction of the force
 
-                F = forceDir * Constants.G * otherBody.mass * mass / dist;
+                F = forceDir * Constants.G * otherBody.mass * mass / dist;//Calculates force of gravity
                 currentVelocity += F;
             }
         }

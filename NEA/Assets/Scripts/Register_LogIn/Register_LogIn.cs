@@ -18,26 +18,26 @@ public class Register_LogIn : MonoBehaviour
     public InputField reInPass;
 
     private int strengthScore;
-
+    int passwordLength;
 
     private void Start() {
         textBox.SetActive(false);
     }
 
     public void getUsername(){
-        //Debug.Log(inUser.text);
+        Debug.Log(inUser.text);
 
         username = inUser.text;
     }
 
     public void getPassword(){
-        //Debug.Log(inPass.text);
+        Debug.Log(inPass.text);
 
         password = inPass.text;
     }
 
     public void getRePassword(){
-        //Debug.Log(reInPass.text);
+        Debug.Log(reInPass.text);
 
         rePass = reInPass.text;
     }
@@ -54,6 +54,8 @@ public class Register_LogIn : MonoBehaviour
         checkPasswordEquality();
     }
 
+    
+
     void checkPasswordEquality(){
         if(password == rePass){
             textBox.SetActive(false);
@@ -65,7 +67,32 @@ public class Register_LogIn : MonoBehaviour
     }
 
     void checkPassStrength(){
-        Debug.Log("Checking Password");
+        Debug.Log("Checking Password, please wait.....");
 
+        int User_Pass_Identical = 0;
+
+        int passwordLength = password.Length;
+        int usernameLength = username.Length;
+
+        char[] passChar = new char[passwordLength];
+        char[] userChar = new char[usernameLength];
+
+        if(passwordLength == usernameLength){
+            for (int i = 0; i < passwordLength; i++){
+                passChar[i] = password[i];
+
+                for(int j = 0; j < usernameLength; j++){
+                    userChar[j] = username[j];
+
+                    if(userChar[i] == passChar[j]){
+                        User_Pass_Identical++;
+
+                        if(User_Pass_Identical == passwordLength){
+                            Debug.Log("Passwords and usernames are the same!");
+                        }
+                    }
+                }
+            }
+        }
     }
 }
