@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Security.Cryptography;
+using System.Text;
 
 public class Register_LogIn : MonoBehaviour
 {
@@ -10,30 +12,37 @@ public class Register_LogIn : MonoBehaviour
     string rePass;//Stores reentered password
 
     public Button Enter;//Stores button
+    public Button Register;
 
-    [Header("Information Text")]
+    [Header("Information Text")] //Stores the text boxes
     public GameObject textBox;
     public GameObject checkButton;
     public GameObject imSure;
 
-    [Header("Text Boxes")]
-    public InputField inUser; //Takes and stores input from textbox
+    [Header("Text Boxes")] //Takes and stores text input
+    public InputField inUser;
     public InputField inPass;
     public InputField reInPass;
 
-    private int strengthScore = 0;
+    private int strengthScore = 0; //Stores strength of password
 
-    bool checking = true;
+    bool needsChecking = true;
+    bool alrChecked = false;
 
     private void Start() {
+        Register.gameObject.SetActive(false);
+
         textBox.SetActive(false);
         checkButton.SetActive(false);
         imSure.SetActive(false);
     }
 
     public void agree(){
-        checking = true;
         imSure.SetActive(false);
+        needsChecking = false;
+        alrChecked = true;
+        checkButton.SetActive(false);
+        Register.gameObject.SetActive(true);
     }
 
     public void getUsername(){
@@ -69,32 +78,35 @@ public class Register_LogIn : MonoBehaviour
     void checkPasswordEquality(){
         if(password == rePass){
             textBox.SetActive(false);
-            checkPassStrength();
+            checkPassStrength(0);
         }
         else{
             textBox.SetActive(true);
         }
     }
 
-    void checkPassStrength(){
-        checking = false;
+    void checkPassStrength(int score){
+        strengthScore = 0;
 
         Debug.Log("Checking Password, please wait.....");
 
-        int passwordLength = password.Length;
-        int usernameLength = username.Length;
+        int passwordLength = password.Length; //Stores how many characters there are in the password as an integer
 
-        char[] passChar = new char[passwordLength];
-        char[] userChar = new char[usernameLength];
+        char[] passChar = new char[passwordLength];//Creates an array with as big as the length of the password
 
         //Checks if username and password are the same thing
-        if(username == password){
+        while(username == password && !alrChecked){
+            needsChecking = true;
             Debug.Log("Password and username are the same so security will be low. Are you sure you want to continue?");
             imSure.SetActive(true);
             checkButton.SetActive(true);
+
+            break;
         }
 
-        while(checking){
+        Debug.Log(needsChecking);
+
+        while(!needsChecking){
             for (int i = 0; i < passwordLength; i++){
                 passChar[i] = password[i];
 
@@ -103,37 +115,74 @@ public class Register_LogIn : MonoBehaviour
                 for (int ASCII_Code = 33; ASCII_Code < 48; ASCII_Code++)
                 {
                     if(passASCII == ASCII_Code){
-                        strengthScore++;
+                        score++;
                     }
                 }
 
                 for (int ASCII_Code = 58; ASCII_Code < 65; ASCII_Code++)
                 {
                     if(passASCII == ASCII_Code){
-                        strengthScore++;
+                        score++;
                     }
                 }
 
                 for (int ASCII_Code = 91; ASCII_Code < 97; ASCII_Code++)
                 {
                     if(passASCII == ASCII_Code){
-                        strengthScore++;
+                        score++;
                     }
                 }
 
                 for (int ASCII_Code = 123; ASCII_Code < 127; ASCII_Code++)
                 {
                     if(passASCII == ASCII_Code){
-                        strengthScore++;
+                        score++;
                     }
                 }
             }
 
-            strengthScore += passwordLength / 2;
-
-            checking = false;
+            needsChecking = true;
+            break;
         }
 
-        //Debug.Log(strengthScore);
+        score += passwordLength / 2;
+
+        strengthScore += score;
+
+        if(strengthScore <= 6){
+            Debug.Log("Password is too weak, write another one");
+        }
+        else if(strengthScore >= 7){
+            Debug.Log("Not bad");
+            Register.gameObject.SetActive(true);
+            Enter.gameObject.SetActive(false);
+        }
+        else if(strengthScore >= 10){
+            Register.gameObject.SetActive(true);
+            Enter.gameObject.SetActive(false);
+            Debug.Log("Very nice");
+        }
+    }
+
+    public void register(){
+        string hashedPassword = sha256(password);
+        Debug.Log(hashedPassword);
+    }
+
+    public static string sha256(string pass_To_Hash){
+
+        StringBuilder stringB = new StringBuilder();
+
+        var hash = SHA256.Create();
+
+        Encoding encode = Encoding.UTF8; //Used UTF8 because it's hashing a string
+
+        byte[] password = hash.ComputeHash(encode.GetBytes(pass_To_Hash));
+
+        foreach(byte b in password){
+            stringB.Append(b.ToString("2x"));
+        }
+
+        return stringB.ToString();
     }
 }
