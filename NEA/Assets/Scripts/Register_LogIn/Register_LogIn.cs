@@ -32,9 +32,8 @@ public class Register_LogIn : MonoBehaviour
 
     private int strengthScore; //Stores strength of password
 
-    bool needsChecking = true;
-    bool alrChecked = false;
     bool passed; // True if password passes the strength test, false otherwise
+    bool isUsername; // True if the password and the username are the same
 
     private void Start() {
         Register.gameObject.SetActive(false);
@@ -51,14 +50,11 @@ public class Register_LogIn : MonoBehaviour
 
     public void agree(){
         imSure.SetActive(false);
-        needsChecking = false;
-        alrChecked = true;
         checkButton.SetActive(false);
         Register.gameObject.SetActive(true);
     }
 
-    public void getText(){ //Button will call functions and will store the text in boxes into strings
-
+    public void getInput(){ //Button will call functions and will store the text in boxes into strings
         username = inUser.text;
         password = inPass.text;
         rePass = reInPass.text;
@@ -110,90 +106,94 @@ public class Register_LogIn : MonoBehaviour
         bool containsNum = false;
         bool containsCap = false;
 
+        //Array of every special character in ASCII code
+        int[] special_in_ASCII = {33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,58,59,60,61,62,63,64,91,92,93,94,95,96,123,124,125,126,127};
+
         isLongEnough.color = Color.red;
         hasCaps.color = Color.red;
         containsSpecialChar.color = Color.red;
         hasNumbers.color = Color.red;
 
         strengthScore = 0;
+        isUsername = false;
 
-        //Array of every special character in ASCII code
-        int[] special_in_ASCII = {33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,58,59,60,61,62,63,64,91,92,93,94,95,96,123,124,125,126,127};
-
-        if(password.Length >= 8){
-            isLong = true;
-            strengthScore++;
-            Debug.Log("Is long enough: " + isLong);
-
-            isLongEnough.color = Color.green;
+        if(username == password){
+            isUsername = true;
+            imSure.SetActive(true);
+            checkButton.SetActive(true);
         }
 
-        foreach(char c in password){
-            if(System.Convert.ToInt32(c) >= 65 && System.Convert.ToInt32(c) <= 90){
-                containsCap = true;
-                strengthScore++;
-                hasCaps.color = Color.green;
-                Debug.Log("Contains capital letter: " + containsCap);
+        while(!isUsername){
+            if(password.Length >= 8){
+                isLong = true;
+
+                isLongEnough.color = Color.green;
             }
 
-            else if(binarySearch(System.Convert.ToInt32(c), special_in_ASCII, special_in_ASCII.Length) == 0){
-                hasSpecialChar = true;
-                strengthScore++;
-                containsSpecialChar.color = Color.green;
-                Debug.Log("Has special character: " + hasSpecialChar);
+            foreach(char c in password){
+                if(System.Convert.ToInt32(c) >= 65 && System.Convert.ToInt32(c) <= 90){
+                    containsCap = true;
+                    hasCaps.color = Color.green;
+                }
+
+                else if(binarySearch(System.Convert.ToInt32(c), special_in_ASCII, special_in_ASCII.Length) == 0){
+                    hasSpecialChar = true;
+                    containsSpecialChar.color = Color.green;
+                }
+
+                else if(System.Convert.ToInt32(c) >= 48 && System.Convert.ToInt32(c) <= 57){
+                    containsNum = true;
+                    hasNumbers.color = Color.green;
+                }
+                
+                else{
+                    isLongEnough.color = Color.red;
+                    hasCaps.color = Color.red;
+                    containsSpecialChar.color = Color.red;
+                    hasNumbers.color = Color.red;
+                }
             }
 
-            else if(System.Convert.ToInt32(c) >= 48 && System.Convert.ToInt32(c) <= 57){
-                containsNum = true;
-                strengthScore++;
-                hasNumbers.color = Color.green;
-                Debug.Log("Contains Number: " + containsNum);
-            }
-            
-            else{
-                isLongEnough.color = Color.red;
-                hasCaps.color = Color.red;
-                containsSpecialChar.color = Color.red;
-                hasNumbers.color = Color.red;
-            }
-        }
+            while(strengthScore >= 0){
+                if(strengthScore > 4){
+                    strengthScore = 4;
+                }
 
-        while(strengthScore > 0){
-            if(strengthScore > 4){
-                strengthScore = 4;
+                break;
+            }
+
+            switch (strengthScore){
+                case 0:
+                    // Debug.Log("Too weak");
+                    strength.text = "Password is too weak, write a new one";
+                    break;
+                case 1:
+                    // Debug.Log("Very Weak");
+                    strength.text = "Very Weak Password";
+                    passed = true;
+                    break;
+                case 2:
+                    // Debug.Log("Okay");
+                    passed = true;
+                    strength.text = "Weak Password";
+                    break;
+                case 3:
+                    // Debug.Log("Strong");
+                    passed = true;
+                    strength.text = "Strong Password";
+                    break;
+                case 4:
+                    // Debug.Log("Very Strong");
+                    strength.text = "Very Strong Password";
+                    passed = true;
+                    break;
+
+                default:
+                    strength.text = "Not known";
+                    break;
             }
 
             break;
-        }
-
-        switch (strengthScore){
-            case 0:
-                Debug.Log("Too weak");
-                break;
-            case 1:
-                Debug.Log("Very Weak");
-                strength.text = "Very Weak Password";
-                passed = true;
-                break;
-            case 2:
-                Debug.Log("Okay");
-                passed = true;
-                strength.text = "Weak Password";
-                break;
-            case 3:
-                Debug.Log("Strong");
-                passed = true;
-                strength.text = "Strong Password";
-                break;
-            case 4:
-                Debug.Log("Very Strong");
-                strength.text = "Very Strong Password";
-                passed = true;
-                break;
-
-            default:
-                strength.text = "Not known";
-                break;
         }
     }
 }
