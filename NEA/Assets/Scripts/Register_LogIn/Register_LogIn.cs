@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -14,8 +15,6 @@ public class Register_LogIn : MonoBehaviour
 
     [Header("Information Text")] //Stores the text boxes
     public GameObject textBox;
-    public GameObject checkButton;
-    public GameObject imSure;
     public Text isLongEnough;
     public Text hasCaps;
     public Text containsSpecialChar;
@@ -38,19 +37,11 @@ public class Register_LogIn : MonoBehaviour
         Register.gameObject.SetActive(false);
 
         textBox.SetActive(false);
-        checkButton.SetActive(false);
-        imSure.SetActive(false);
 
         isLongEnough.color = Color.red;
         hasCaps.color = Color.red;
         containsSpecialChar.color = Color.red;
         hasNumbers.color = Color.red;
-    }
-
-    public void agree(){
-        imSure.SetActive(false);
-        checkButton.SetActive(false);
-        checkPassStrength(true);
     }
 
     public void getInput(){ //Button will call functions and will store the text in boxes into strings
@@ -64,7 +55,7 @@ public class Register_LogIn : MonoBehaviour
     void checkPasswordEquality(){ // Will only call the function if both passwords are equal
         if(password == rePass){
             textBox.SetActive(false);
-            checkPassStrength(true);
+            checkPassStrength();
         }
         else{
             textBox.SetActive(true);
@@ -99,7 +90,7 @@ public class Register_LogIn : MonoBehaviour
         return -1; // If not found
     }
 
-    void checkPassStrength(bool alrChecked){
+    void checkPassStrength(){
         bool isLong = false;
         bool hasSpecialChar = false;
         bool containsNum = false;
@@ -118,20 +109,8 @@ public class Register_LogIn : MonoBehaviour
         hasNumbers.color = Color.red;
 
         strengthScore = 0;
-        isUsername = false;
 
-        if(username == password && alrChecked == false){
-            isUsername = true;
-            imSure.SetActive(true);
-            checkButton.SetActive(true);
-            alrChecked = false;
-        }else{
-            alrChecked = true;
-        }
-
-        Debug.Log(alrChecked);
-
-        while(!isUsername && alrChecked){
+        while(true){
             if(password.Length >= 8){
                 isLong = true;
 
@@ -187,7 +166,7 @@ public class Register_LogIn : MonoBehaviour
                 }
             }
 
-            Debug.Log(strengthScore);
+            // Debug.Log(strengthScore);
 
             while(strengthScore >= 0){
                 if(strengthScore > 4){
@@ -230,5 +209,26 @@ public class Register_LogIn : MonoBehaviour
 
             break;
         }
+
+        if(passed){
+            Enter.gameObject.SetActive(false);
+            Register.gameObject.SetActive(true);
+        }else{
+            Enter.gameObject.SetActive(true);
+            Register.gameObject.SetActive(false);
+        }
+    }
+
+    void register(){
+        hash(password);
+    }
+
+    void hash(string hashPass){
+        byte[] bytes = Encoding.UTF8.GetBytes(hashPass);
+
+        SHA256 hashAlgo = SHA256.Create();
+        byte[] hashed = hashAlgo.ComputeHash(bytes);
+
+        Debug.Log(BitConverter.ToString(hashed).Replace("-", ""));
     }
 }
