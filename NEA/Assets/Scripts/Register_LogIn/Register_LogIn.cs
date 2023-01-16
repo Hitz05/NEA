@@ -220,15 +220,17 @@ public class Register_LogIn : MonoBehaviour
     }
 
     void register(){
-        hash(password);
+        Debug.Log(hash(password));
     }
 
-    void hash(string hashPass){
+    string hash(string hashPass){
         byte[] bytes = Encoding.UTF8.GetBytes(hashPass);
 
         SHA256 hashAlgo = SHA256.Create();
         byte[] hashed = hashAlgo.ComputeHash(bytes);
 
-        Debug.Log(BitConverter.ToString(hashed).Replace("-", ""));
+        string hashedPass = BitConverter.ToString(hashed).Replace("-", "");
+
+        return hashedPass;
     }
 }
