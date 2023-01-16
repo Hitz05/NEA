@@ -11,7 +11,6 @@ public class Register_LogIn : MonoBehaviour
     string password;//Stores password
     string rePass;//Stores reentered password
 
-    
 
     [Header("Information Text")] //Stores the text boxes
     public GameObject textBox;
@@ -106,8 +105,12 @@ public class Register_LogIn : MonoBehaviour
         bool containsNum = false;
         bool containsCap = false;
 
+        int arrLimit = 0;
+
         //Array of every special character in ASCII code
         int[] special_in_ASCII = {33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,58,59,60,61,62,63,64,91,92,93,94,95,96,123,124,125,126,127};
+
+        bool[] checks = {isLong, hasSpecialChar, containsNum, containsCap};
 
         isLongEnough.color = Color.red;
         hasCaps.color = Color.red;
@@ -127,22 +130,36 @@ public class Register_LogIn : MonoBehaviour
             if(password.Length >= 8){
                 isLong = true;
 
+                checks[0] = true;
+
                 isLongEnough.color = Color.green;
             }
 
             foreach(char c in password){
+                
+                arrLimit++;
+
                 if(System.Convert.ToInt32(c) >= 65 && System.Convert.ToInt32(c) <= 90){
                     containsCap = true;
+
+                    checks[3] = true;
+
                     hasCaps.color = Color.green;
                 }
 
                 else if(binarySearch(System.Convert.ToInt32(c), special_in_ASCII, special_in_ASCII.Length) == 0){
                     hasSpecialChar = true;
+
+                    checks[2] = true;
+
                     containsSpecialChar.color = Color.green;
                 }
 
                 else if(System.Convert.ToInt32(c) >= 48 && System.Convert.ToInt32(c) <= 57){
                     containsNum = true;
+
+                    checks[1] = true;
+
                     hasNumbers.color = Color.green;
                 }
                 
@@ -152,7 +169,20 @@ public class Register_LogIn : MonoBehaviour
                     containsSpecialChar.color = Color.red;
                     hasNumbers.color = Color.red;
                 }
+
+                if(arrLimit == password.Length){
+                    break;
+                }
             }
+
+            for(int i = 0; i < checks.Length; i++){
+                if(checks[i] == true){
+                    strengthScore++;
+                    Debug.Log(checks[i]);
+                }
+            }
+
+            Debug.Log(strengthScore);
 
             while(strengthScore >= 0){
                 if(strengthScore > 4){
