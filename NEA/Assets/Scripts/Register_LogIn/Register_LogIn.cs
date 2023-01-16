@@ -50,7 +50,7 @@ public class Register_LogIn : MonoBehaviour
     public void agree(){
         imSure.SetActive(false);
         checkButton.SetActive(false);
-        Register.gameObject.SetActive(true);
+        checkPassStrength(true);
     }
 
     public void getInput(){ //Button will call functions and will store the text in boxes into strings
@@ -64,7 +64,7 @@ public class Register_LogIn : MonoBehaviour
     void checkPasswordEquality(){ // Will only call the function if both passwords are equal
         if(password == rePass){
             textBox.SetActive(false);
-            checkPassStrength();
+            checkPassStrength(true);
         }
         else{
             textBox.SetActive(true);
@@ -99,13 +99,13 @@ public class Register_LogIn : MonoBehaviour
         return -1; // If not found
     }
 
-    void checkPassStrength(){
+    void checkPassStrength(bool alrChecked){
         bool isLong = false;
         bool hasSpecialChar = false;
         bool containsNum = false;
         bool containsCap = false;
 
-        int arrLimit = 0;
+        int arrLimit = 0; // Will check how many times it has iterated through the password
 
         //Array of every special character in ASCII code
         int[] special_in_ASCII = {33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,58,59,60,61,62,63,64,91,92,93,94,95,96,123,124,125,126,127};
@@ -120,13 +120,18 @@ public class Register_LogIn : MonoBehaviour
         strengthScore = 0;
         isUsername = false;
 
-        if(username == password){
+        if(username == password && alrChecked == false){
             isUsername = true;
             imSure.SetActive(true);
             checkButton.SetActive(true);
+            alrChecked = false;
+        }else{
+            alrChecked = true;
         }
 
-        while(!isUsername){
+        Debug.Log(alrChecked);
+
+        while(!isUsername && alrChecked){
             if(password.Length >= 8){
                 isLong = true;
 
@@ -178,7 +183,7 @@ public class Register_LogIn : MonoBehaviour
             for(int i = 0; i < checks.Length; i++){
                 if(checks[i] == true){
                     strengthScore++;
-                    Debug.Log(checks[i]);
+                    // Debug.Log(checks[i]);
                 }
             }
 
