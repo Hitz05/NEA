@@ -218,10 +218,11 @@ public class Register_LogIn : MonoBehaviour
     }
 
     void register(){
-        test();
+        save();
         Debug.Log(hash(password));
     }
 
+    //This functions will take 1 parameter which is the password, then it will hash it using SHA-256 and it will return the hashed password as a string
     string hash(string hashPass){
         byte[] bytes = Encoding.UTF8.GetBytes(hashPass);
 
@@ -233,16 +234,15 @@ public class Register_LogIn : MonoBehaviour
         return hashedPass;
     }
 
-    void test(){
+    //This procedure will save the password and username so that the user can log in
+    void save(){
+        string fileName = hash(username)+ ".txt"; //Makes a .txt file with the users name
+        string path = "C:\\pAccounts\\" + fileName; //Path of .txt file / pAccounts = Project Accounts
 
-        string fileName = hash(username) + ".txt";
-        string path = "C:\\NEATEST\\" + fileName;
-
-        if(!Directory.Exists("C:\\NEATEST")){
-            Directory.CreateDirectory("C:\\NEATEST");
+        //Checks if folder exists, if not it will create it
+        if(!Directory.Exists("pAccounts")){
+            Directory.CreateDirectory("C:\\pAccounts");
         }
-
         File.WriteAllText(path, hash(password));
-
     }
 }
