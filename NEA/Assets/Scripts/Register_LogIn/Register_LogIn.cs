@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.IO;
 
 public class Register_LogIn : MonoBehaviour
 {
     string username;//Stores username
     string password;//Stores password
     string rePass;//Stores reentered password
-
 
     [Header("Information Text")] //Stores the text boxes
     public GameObject textBox;
@@ -220,6 +218,7 @@ public class Register_LogIn : MonoBehaviour
     }
 
     void register(){
+        test();
         Debug.Log(hash(password));
     }
 
@@ -232,5 +231,18 @@ public class Register_LogIn : MonoBehaviour
         string hashedPass = BitConverter.ToString(hashed).Replace("-", "");
 
         return hashedPass;
+    }
+
+    void test(){
+
+        string fileName = hash(username) + ".txt";
+        string path = "C:\\NEATEST\\" + fileName;
+
+        if(!Directory.Exists("C:\\NEATEST")){
+            Directory.CreateDirectory("C:\\NEATEST");
+        }
+
+        File.WriteAllText(path, hash(password));
+
     }
 }
