@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,9 +8,12 @@ using System.IO;
 
 public class Register_LogIn : MonoBehaviour
 {
-    string username;//Stores username
-    string password;//Stores password
+    string regUsername;//Stores username when registering
+    string regPassword;//Stores password when registering
     string rePass;//Stores reentered password
+
+    private string logUsername;
+    private string logPassword;
 
     [Header("Information Text")] //Stores the text boxes
     public GameObject textBox;
@@ -42,16 +46,24 @@ public class Register_LogIn : MonoBehaviour
         hasNumbers.color = Color.red;
     }
 
-    public void getInput(){ //Button will call functions and will store the text in boxes into strings
-        username = inUser.text;
-        password = inPass.text;
+    public void getLogInput(){
+        logUsername = inUser.text;
+        logPassword = inPass.text;
+
+        Debug.Log(logUsername);
+        Debug.Log(logPassword);
+    }
+
+    public void getRegInput(){ //Button will call functions and will store the text in boxes into strings
+        regUsername = inUser.text;
+        regPassword = inPass.text;
         rePass = reInPass.text;
 
         checkPasswordEquality();
     }
 
     void checkPasswordEquality(){ // Will only call the function if both passwords are equal
-        if(password == rePass){
+        if(regPassword == rePass){
             textBox.SetActive(false);
             checkPassStrength();
         }
@@ -109,7 +121,7 @@ public class Register_LogIn : MonoBehaviour
         strengthScore = 0;
 
         while(true){
-            if(password.Length >= 8){
+            if(regPassword.Length >= 8){
                 isLong = true;
 
                 checks[0] = true;
@@ -117,7 +129,7 @@ public class Register_LogIn : MonoBehaviour
                 isLongEnough.color = Color.green;
             }
 
-            foreach(char c in password){
+            foreach(char c in regPassword){
                 
                 arrLimit++;
 
@@ -152,7 +164,7 @@ public class Register_LogIn : MonoBehaviour
                     hasNumbers.color = Color.red;
                 }
 
-                if(arrLimit == password.Length){
+                if(arrLimit == regPassword.Length){
                     break;
                 }
             }
@@ -219,7 +231,8 @@ public class Register_LogIn : MonoBehaviour
 
     void register(){
         save();
-        Debug.Log(hash(password));
+        SceneManager.LoadScene("LogIn");
+        // Debug.Log(hash(password));
     }
 
     //This functions will take 1 parameter which is the password, then it will hash it using SHA-256 and it will return the hashed password as a string
@@ -236,13 +249,16 @@ public class Register_LogIn : MonoBehaviour
 
     //This procedure will save the password and username so that the user can log in
     void save(){
-        string fileName = hash(username)+ ".txt"; //Makes a .txt file with the users name
+        string fileName = hash(regUsername)+ ".txt"; //Makes a .txt file with the users name
         string path = "C:\\pAccounts\\" + fileName; //Path of .txt file / pAccounts = Project Accounts
 
         //Checks if folder exists, if not it will create it
         if(!Directory.Exists("pAccounts")){
             Directory.CreateDirectory("C:\\pAccounts");
         }
-        File.WriteAllText(path, hash(password));
+        //Checks if the file exists, if it exists, it will overwrite the contents in the .txt
+        if(!Directory.Exists(path)){
+            File.WriteAllText(path, hash(regPassword));
+        }
     }
 }
