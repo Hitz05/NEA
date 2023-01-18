@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LogIn : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    Register_LogIn reg; // Imports class Register_Login
+
+    public InputField logUsername, logPassword;
+
+    public string username, password;
+
+    public void logIn(){
+        username = logUsername.text;
+        password = logPassword.text;
+
+        Debug.Log(reg.hash(username));
+        Debug.Log(reg.hash(password));
     }
 }

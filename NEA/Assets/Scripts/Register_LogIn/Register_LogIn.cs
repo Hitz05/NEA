@@ -8,12 +8,11 @@ using System.IO;
 
 public class Register_LogIn : MonoBehaviour
 {
+    LogIn login; // Imports script LogIn.cs
+
     string regUsername;//Stores username when registering
     string regPassword;//Stores password when registering
     string rePass;//Stores reentered password
-
-    private string logUsername;
-    private string logPassword;
 
     [Header("Information Text")] //Stores the text boxes
     public GameObject textBox;
@@ -44,14 +43,6 @@ public class Register_LogIn : MonoBehaviour
         hasCaps.color = Color.red;
         containsSpecialChar.color = Color.red;
         hasNumbers.color = Color.red;
-    }
-
-    public void getLogInput(){
-        logUsername = inUser.text;
-        logPassword = inPass.text;
-
-        Debug.Log(logUsername);
-        Debug.Log(logPassword);
     }
 
     public void getRegInput(){ //Button will call functions and will store the text in boxes into strings
@@ -236,7 +227,7 @@ public class Register_LogIn : MonoBehaviour
     }
 
     //This functions will take 1 parameter which is the password, then it will hash it using SHA-256 and it will return the hashed password as a string
-    string hash(string hashPass){
+    public string hash(string hashPass){
         byte[] bytes = Encoding.UTF8.GetBytes(hashPass);
 
         SHA256 hashAlgo = SHA256.Create();

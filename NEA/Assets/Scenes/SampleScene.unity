@@ -1697,7 +1697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdcd9a764dbd204aa70b6d3bbe7b488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialVel: 320
+  initialVel: 427
   initialVelocity: {x: 900, y: 0, z: 0}
   gravityOfBody: 5
   isStar: 0
