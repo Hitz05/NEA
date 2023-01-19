@@ -223,11 +223,11 @@ public class Register_LogIn : MonoBehaviour
     void register(){
         save();
         SceneManager.LoadScene("LogIn");
-        // Debug.Log(hash(password));
+         Debug.Log(hash(regUsername));
     }
 
     //This functions will take 1 parameter which is the password, then it will hash it using SHA-256 and it will return the hashed password as a string
-    public string hash(string hashPass){
+    string hash(string hashPass){
         byte[] bytes = Encoding.UTF8.GetBytes(hashPass);
 
         SHA256 hashAlgo = SHA256.Create();
