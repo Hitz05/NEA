@@ -50,15 +50,17 @@ public class LogIn : MonoBehaviour
             message.text = "Password Field cannot be empty";
         }
 
-        while(password != ""){
+        while(password != ""){ //Pre-test as it has to run only if the condition is met
             if(File.Exists(filePath)){ // Checks if account exists
             // Debug.Log("You can log in");
 
-                string passToCompare = File.ReadAllText(filePath);
+                string passToCompare = File.ReadAllText(filePath); //Reads whats in the file then stores it in a variable
 
                 //Hash algorithm will retur the same hashed text if the original is the same
-                if(passToCompare == hash(password)){
+                if(passToCompare == hash(password)){ 
                     Debug.Log("Logged In");
+                    SceneManager.LoadScene("Simulation"); // Sends user to simulation once logged in
+
                 }else{
                     message.text = "Wrong Password";
                 }
