@@ -74,4 +74,12 @@ public class LogIn : MonoBehaviour
             break;
         }
     }
+
+    public void backToMenu(){
+        SceneManager.LoadScene("StartMenu");
+    }
+
+    public void quitSim(){
+        Application.Quit();
+    }
 }

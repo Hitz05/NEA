@@ -76,7 +76,7 @@ public class Register_LogIn : MonoBehaviour
 
             if(ASCII_ARR[pivot] == target){
                 //Debug.Log(searchCount);
-                return 0;
+                return 0; //Will return 0 if the target is found
             }
 
             else if(ASCII_ARR[pivot] < target){
@@ -104,6 +104,11 @@ public class Register_LogIn : MonoBehaviour
 
         bool[] checks = {isLong, hasSpecialChar, containsNum, containsCap};
 
+        for (int i = 0; i < checks.Length; i++) //Resets all the booleans
+        {
+            checks[i] = false;
+        }
+
         isLongEnough.color = Color.red;
         hasCaps.color = Color.red;
         containsSpecialChar.color = Color.red;
@@ -116,12 +121,10 @@ public class Register_LogIn : MonoBehaviour
                 isLong = true;
 
                 checks[0] = true;
-
-                isLongEnough.color = Color.green;
             }
 
             foreach(char c in regPassword){
-                
+
                 arrLimit++;
 
                 if(System.Convert.ToInt32(c) >= 65 && System.Convert.ToInt32(c) <= 90){
@@ -167,7 +170,20 @@ public class Register_LogIn : MonoBehaviour
                 }
             }
 
-            // Debug.Log(strengthScore);
+            if(checks[0] == true){
+                isLongEnough.color = Color.green;
+            }
+            else if(checks[1] == true){
+                hasNumbers.color = Color.green;
+            }
+            else if(checks[2] == true){
+                containsSpecialChar.color = Color.green;
+            }
+            else if(checks[3] == true){
+                hasCaps.color = Color.green;
+            }
+
+            Debug.Log(strengthScore);
 
             while(strengthScore >= 0){
                 if(strengthScore > 4){
@@ -185,7 +201,6 @@ public class Register_LogIn : MonoBehaviour
                 case 1:
                     // Debug.Log("Very Weak");
                     strength.text = "Very Weak Password";
-                    passed = true;
                     break;
                 case 2:
                     // Debug.Log("Okay");
@@ -212,7 +227,6 @@ public class Register_LogIn : MonoBehaviour
         }
 
         if(passed){
-            Enter.gameObject.SetActive(false);
             Register.gameObject.SetActive(true);
         }else{
             Enter.gameObject.SetActive(true);
@@ -251,5 +265,13 @@ public class Register_LogIn : MonoBehaviour
         if(!Directory.Exists(path)){
             File.WriteAllText(path, hash(regPassword));
         }
+    }
+
+    public void backToMenu(){
+        SceneManager.LoadScene("StartMenu");
+    }
+
+    public void quitSim(){
+        Application.Quit();
     }
 }
