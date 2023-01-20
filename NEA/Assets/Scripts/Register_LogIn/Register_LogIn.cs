@@ -16,10 +16,6 @@ public class Register_LogIn : MonoBehaviour
 
     [Header("Information Text")] //Stores the text boxes
     public GameObject textBox;
-    public Text isLongEnough;
-    public Text hasCaps;
-    public Text containsSpecialChar;
-    public Text hasNumbers;
     public Text strength;
 
     [Header("Input Text")] //Takes and stores text input
@@ -38,11 +34,6 @@ public class Register_LogIn : MonoBehaviour
         Register.gameObject.SetActive(false);
 
         textBox.SetActive(false);
-
-        isLongEnough.color = Color.red;
-        hasCaps.color = Color.red;
-        containsSpecialChar.color = Color.red;
-        hasNumbers.color = Color.red;
     }
 
     public void getRegInput(){ //Button will call functions and will store the text in boxes into strings
@@ -109,11 +100,6 @@ public class Register_LogIn : MonoBehaviour
             checks[i] = false;
         }
 
-        isLongEnough.color = Color.red;
-        hasCaps.color = Color.red;
-        containsSpecialChar.color = Color.red;
-        hasNumbers.color = Color.red;
-
         strengthScore = 0;
 
         while(true){
@@ -132,7 +118,6 @@ public class Register_LogIn : MonoBehaviour
 
                     checks[3] = true;
 
-                    hasCaps.color = Color.green;
                 }
 
                 else if(binarySearch(System.Convert.ToInt32(c), special_in_ASCII, special_in_ASCII.Length) == 0){
@@ -140,7 +125,6 @@ public class Register_LogIn : MonoBehaviour
 
                     checks[2] = true;
 
-                    containsSpecialChar.color = Color.green;
                 }
 
                 else if(System.Convert.ToInt32(c) >= 48 && System.Convert.ToInt32(c) <= 57){
@@ -148,16 +132,8 @@ public class Register_LogIn : MonoBehaviour
 
                     checks[1] = true;
 
-                    hasNumbers.color = Color.green;
                 }
-                
-                else{
-                    isLongEnough.color = Color.red;
-                    hasCaps.color = Color.red;
-                    containsSpecialChar.color = Color.red;
-                    hasNumbers.color = Color.red;
-                }
-
+ 
                 if(arrLimit == regPassword.Length){
                     break;
                 }
@@ -168,19 +144,6 @@ public class Register_LogIn : MonoBehaviour
                     strengthScore++;
                     // Debug.Log(checks[i]);
                 }
-            }
-
-            if(checks[0] == true){
-                isLongEnough.color = Color.green;
-            }
-            else if(checks[1] == true){
-                hasNumbers.color = Color.green;
-            }
-            else if(checks[2] == true){
-                containsSpecialChar.color = Color.green;
-            }
-            else if(checks[3] == true){
-                hasCaps.color = Color.green;
             }
 
             Debug.Log(strengthScore);
