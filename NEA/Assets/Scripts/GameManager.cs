@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -14,26 +15,41 @@ public class GameManager : MonoBehaviour
     public bool trailSwitch = true;//Enables trail of planets(Bad Performance)
 
     public static bool canvOn;
+    bool isPlaying = false;
 
-    Component[] body;
+    public GameObject[] body;
+
+    public Button predict;
 
     void Awake(){
         timeFlow = 1;
 
-        body = GetComponents(typeof(BodyForce));//Find every object containing the script BodyForce
-    }
+        body = GameObject.FindGameObjectsWithTag("Body");
 
-    private void Start() {
-        for (int i = 0; i < body.Length; i++)
-        {
-            body[i].GetComponent<BodyForce>().enabled = false;
-        }
+        Debug.Log(body.Length);
     }
 
     // Update is called once per frame
     void Update()
     {
         Time.timeScale = timeFlow; //Keeps time of simulation
+
+        if(!isPlaying){ // Will disable physics if the start button is pressed so that the user can change things
+            for (int i = 0; i < body.Length; i++)
+            {
+                body[i].GetComponent<BodyForce>().enabled = false;
+            }
+
+            predict.gameObject.SetActive(true);
+
+        }else{
+            for (int i = 0; i < body.Length; i++)
+            {
+                body[i].GetComponent<BodyForce>().enabled = true;
+            }
+
+            predict.gameObject.SetActive(false);
+        }
 
         camSwap(0, 0);
 
@@ -96,5 +112,11 @@ public class GameManager : MonoBehaviour
     }
     public void QuitSim(){
         Application.Quit();
+    }
+
+    public void Start_Pause(){
+        isPlaying = !isPlaying;
+
+        Debug.Log(isPlaying);
     }
 }
