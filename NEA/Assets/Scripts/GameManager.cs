@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,8 +15,19 @@ public class GameManager : MonoBehaviour
 
     public static bool canvOn;
 
+    Component[] body;
+
     void Awake(){
         timeFlow = 1;
+
+        body = GetComponents(typeof(BodyForce));//Find every object containing the script BodyForce
+    }
+
+    private void Start() {
+        for (int i = 0; i < body.Length; i++)
+        {
+            body[i].GetComponent<BodyForce>().enabled = false;
+        }
     }
 
     // Update is called once per frame
@@ -79,5 +89,12 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void MainMenu(){
+        SceneManager.LoadScene("StartMenu");
+    }
+    public void QuitSim(){
+        Application.Quit();
     }
 }
