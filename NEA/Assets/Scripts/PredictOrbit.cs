@@ -5,17 +5,25 @@ public class PredictOrbit : MonoBehaviour
 
     public GameManager gameManager;
 
-    GameObject dupe;
+    GameObject dupe; //Stores the duplicate planets
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    public void predict(){
+        gameManager.predicting = !gameManager.predicting;
+
         for (int i = 0; i < gameManager.body.Length; i++)
         {
             dupe = Instantiate(gameManager.body[i]);
+            dupe.gameObject.tag = "Dupe";
 
-            dupe.GetComponent<SphereCollider>().enabled = false;
-            // dupe.GetComponent<BodyForce>().enabled = false;
+            if(gameManager.body[i].gameObject.tag != "Dupe"){
+                dupe.GetComponent<BodyForce>().enabled = true;
+                gameManager.body[i].GetComponent<BodyForce>().enabled = false;
+                gameManager.body[i].gameObject.SetActive(false);
+            }
+        }
+
+        if(!gameManager.predicting){
+            Destroy(dupe);
         }
     }
 }

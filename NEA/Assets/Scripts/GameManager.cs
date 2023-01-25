@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     public GameObject[] body;
 
     public Button predict;
+    public Button play;
+
+    public bool predicting;
 
     void Awake(){
         timeFlow = 1;
@@ -59,6 +62,8 @@ public class GameManager : MonoBehaviour
         else{
             enableTrail = false;
         }
+
+        isPredicting();
     }
 
     void camSwap(int arrLimiter, int n){
@@ -118,5 +123,13 @@ public class GameManager : MonoBehaviour
         isPlaying = !isPlaying;
 
         Debug.Log(isPlaying);
+    }
+
+    void isPredicting(){
+        if(predicting){
+            play.gameObject.SetActive(false);
+        }else{
+            play.gameObject.SetActive(true);
+        }
     }
 }
