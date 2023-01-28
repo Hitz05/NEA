@@ -21,6 +21,15 @@ public class PredictOrbit : MonoBehaviour
         }
     }
 
+    private void Update() {
+        if(!gameManager.predicting){ //It will destroy every duplicate if its not predicting the orbit
+            for (int j = 0; j < gameManager.body.Length; j++)
+            {
+                Destroy(dupeArr[j]);
+            }
+        }
+    }
+
     public void predict(){
         gameManager.predicting = !gameManager.predicting;
 
@@ -49,10 +58,11 @@ public class PredictOrbit : MonoBehaviour
             }
         }
 
-        if(!gameManager.predicting){ //It will destroy every duplicate if its not predicting the orbit
-            for (int j = 0; j < gameManager.body.Length; j++)
+        if(!gameManager.predicting){
+            for (int i = 0; i < gameManager.body.Length; i++)
             {
-                Destroy(dupeArr[j]);
+                dupeArr[i].GetComponent<BodyForce>().enabled = false;
+                dupeArr[i].gameObject.SetActive(false);
             }
         }
     }
