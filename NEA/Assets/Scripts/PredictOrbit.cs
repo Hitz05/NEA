@@ -62,7 +62,7 @@ public class PredictOrbit : MonoBehaviour
             for (int i = 0; i < gameManager.body.Length; i++)
             {
                 dupeArr[i].GetComponent<BodyForce>().enabled = false;
-                dupeArr[i].gameObject.SetActive(false);
+                // dupeArr[i].gameObject.SetActive(false);
             }
         }
     }
