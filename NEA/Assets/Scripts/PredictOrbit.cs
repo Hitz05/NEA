@@ -2,68 +2,62 @@ using UnityEngine;
 
 public class PredictOrbit : MonoBehaviour
 {
-
     public GameManager gameManager;
 
-    GameObject dupe; //Stores the duplicate planets
-    GameObject[] dupeArr;//Stores all duplicates on an array so that their position can be reset
-
-    Vector3[] defaultLoc;
+    Vector3[] defaultPos; //Stores all the different initial positions of all the planets
+    GameObject[] dupePlanetArr;
+    GameObject dupePlanet;
 
     private void Awake() {
 
-        defaultLoc = new Vector3[gameManager.body.Length];
-        dupeArr = new GameObject[gameManager.body.Length];
-
+        defaultPos = new Vector3[gameManager.body.Length];
+        
         for (int i = 0; i < gameManager.body.Length; i++)
         {
-            defaultLoc[i] = gameManager.body[i].transform.position;
+            //Get position and store them
+            defaultPos[i] = gameManager.body[i].transform.position;
         }
     }
 
-    private void Update() {
-        if(!gameManager.predicting){ //It will destroy every duplicate if its not predicting the orbit
-            for (int j = 0; j < gameManager.body.Length; j++)
-            {
-                Destroy(dupeArr[j]);
-            }
-        }
-    }
+    public void predictOrbit(){
+        Debug.Log("Predicting");
+        dupePlanetArr = new GameObject[gameManager.body.Length];
 
-    public void predict(){
-        gameManager.predicting = !gameManager.predicting;
+        for (int i = 0; i < gameManager.body.Length; i++)
+        {   
+            //Duplicate every game object and hide those that are not duplicates. Duplicates are given a tag
+            //First hide original planets, instantiate duplicates and provide tags
+            dupePlanet = Instantiate(gameManager.body[i]);
+            dupePlanet.gameObject.tag = "Dupe";
 
-        Debug.Log(gameManager.predicting);
-
-        for (int i = 0; i < gameManager.body.Length; i++) //This will loop through every planet
-        {
-            gameManager.body[i].transform.position = defaultLoc[i]; //It will first reset the location of every object
-
-            dupe = Instantiate(gameManager.body[i]); //It will duplicate those planets
-            dupe.gameObject.tag = "Dupe";//Adds tag "Dupe"(short for duplicate)
-
-            dupeArr[i] = dupe; //Adds duplicates to array
-
-            dupeArr[i].transform.position = defaultLoc[i]; //It will set their location to the start
-
-            if(gameManager.body[i].gameObject.tag != "Dupe"){ //If the planet is not a duplicate, it will be invisible until duplicate is removed
-                dupe.GetComponent<BodyForce>().enabled = true;
-                gameManager.body[i].GetComponent<BodyForce>().enabled = false;
+            if(gameManager.body[i].gameObject.tag != "Dupe"){
                 gameManager.body[i].gameObject.SetActive(false);
             }
-            else{
-                dupe.GetComponent<BodyForce>().enabled = false;
-                gameManager.body[i].GetComponent<BodyForce>().enabled = true;
-                gameManager.body[i].gameObject.SetActive(true);
-            }
-        }
 
-        if(!gameManager.predicting){
-            for (int i = 0; i < gameManager.body.Length; i++)
-            {
-                dupeArr[i].GetComponent<BodyForce>().enabled = false;
-                // dupeArr[i].gameObject.SetActive(false);
-            }
+            dupePlanetArr[i] = dupePlanet;
+            dupePlanetArr[i].transform.position = defaultPos[i];
+
+            /*To predict orbit:
+            1. Make object dissapear
+            2. Trail will be seen
+            3. Planets move but user will only see the trail
+            4. Tell user if a collision happens
+            */
+
+            //1.
+            dupePlanetArr[i].GetComponent<MeshRenderer>().enabled = false;
+            //2.
+            gameManager.trailSwitch = true;
+            dupePlanetArr[i].GetComponent<TrailRenderer>().enabled = true;
+            dupePlanetArr[i].GetComponent<TrailRenderer>().autodestruct = true;
+            dupePlanetArr[i].GetComponent<TrailRenderer>().emitting = true;
+            dupePlanetArr[i].GetComponent<TrailRenderer>().time = 20;
+
+            //3.
+            dupePlanetArr[i].GetComponent<BodyForce>().enabled = true;
         }
+    }
+    public void reset(){
+        Debug.Log("reset");
     }
 }

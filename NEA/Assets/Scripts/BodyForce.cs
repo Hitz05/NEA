@@ -60,11 +60,9 @@ public class BodyForce : MonoBehaviour
 
         if(GameManager.enableTrail){
             trail.enabled = true;
-            trail.generateLightingData = false;
         }
         else if(!GameManager.enableTrail){
             trail.enabled = false;
-            trail.generateLightingData = false;
         }
     }
 

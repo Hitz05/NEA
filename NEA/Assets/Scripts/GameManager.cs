@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public PredictOrbit orbits;
+
     public float timeFlow = 1f;
 
     int camCount;//Number of cameras in the scene
@@ -19,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject[] body;
 
-    public Button predict;
+    public Button predictButton;
     public Button play;
 
     public bool predicting;
@@ -37,13 +39,15 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = timeFlow; //Keeps time of simulation
 
+        resetTime();
+
         if(!isPlaying){ // Will disable physics if the start button is pressed so that the user can change things
             for (int i = 0; i < body.Length; i++)
             {
                 body[i].GetComponent<BodyForce>().enabled = false;
             }
 
-            predict.gameObject.SetActive(true);
+            predictButton.gameObject.SetActive(true);
 
         }else{
             for (int i = 0; i < body.Length; i++)
@@ -51,7 +55,7 @@ public class GameManager : MonoBehaviour
                 body[i].GetComponent<BodyForce>().enabled = true;
             }
 
-            predict.gameObject.SetActive(false);
+            predictButton.gameObject.SetActive(false);
         }
 
         camSwap(0, 0);
@@ -62,8 +66,6 @@ public class GameManager : MonoBehaviour
         else{
             enableTrail = false;
         }
-
-        isPredicting();
     }
 
     void camSwap(int arrLimiter, int n){
@@ -112,6 +114,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void resetTime(){
+        if(timeFlow < 0){
+            timeFlow = 0;
+        }
+    }
+
     public void MainMenu(){
         SceneManager.LoadScene("StartMenu");
     }
@@ -125,11 +133,15 @@ public class GameManager : MonoBehaviour
         Debug.Log(isPlaying);
     }
 
-    void isPredicting(){
+    public void predict(){
+        predicting = !predicting;
+
         if(predicting){
             play.gameObject.SetActive(false);
+            orbits.predictOrbit();
         }else{
             play.gameObject.SetActive(true);
+            orbits.reset();
         }
     }
 }
