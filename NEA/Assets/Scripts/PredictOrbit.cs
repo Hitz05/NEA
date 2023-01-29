@@ -41,7 +41,6 @@ public class PredictOrbit : MonoBehaviour
             1. Make object dissapear
             2. Trail will be seen
             3. Planets move but user will only see the trail
-            4. Tell user if a collision happens
             */
 
             //1.

@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
 
     public bool predicting;
 
+    public Slider timeflowSlider;
+    public Text timeFlowTxT;
+
     void Awake(){
         timeFlow = 1;
 
@@ -37,7 +40,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timeFlow = timeflowSlider.value;
+
         Time.timeScale = timeFlow; //Keeps time of simulation
+
+        timeFlowTxT.text = timeFlow.ToString() + "x";
 
         resetTime();
 
@@ -139,9 +146,11 @@ public class GameManager : MonoBehaviour
         if(predicting){
             play.gameObject.SetActive(false);
             orbits.predictOrbit();
+            timeflowSlider.gameObject.SetActive(true);
         }else{
             play.gameObject.SetActive(true);
             orbits.reset();
+            timeflowSlider.gameObject.SetActive(false);
         }
     }
 }
