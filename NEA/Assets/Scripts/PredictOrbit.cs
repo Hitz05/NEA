@@ -57,6 +57,18 @@ public class PredictOrbit : MonoBehaviour
         }
     }
     public void reset(){
+        GameObject[] duplicateFind;
+
         Debug.Log("reset");
+        gameManager.trailSwitch = false;
+
+        duplicateFind = new GameObject[GameObject.FindGameObjectsWithTag("Dupe").Length];
+
+        //Find all objects with tag "Dupe"
+        duplicateFind = GameObject.FindGameObjectsWithTag("Dupe");
+
+        if(duplicateFind.Length == 0){
+            Debug.Log("No duplicates found.");
+        }
     }
 }
