@@ -43,7 +43,7 @@ public class BodyForce : MonoBehaviour
 
     private void Update() {
         if(!isStar){
-            
+
             numOfObjects = GameObject.FindGameObjectsWithTag("Body").Length;
 
             //Set number of objects to be the same as the number of celestial bodies

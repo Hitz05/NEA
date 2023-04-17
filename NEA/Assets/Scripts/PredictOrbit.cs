@@ -4,7 +4,7 @@ public class PredictOrbit : MonoBehaviour
 {
     public GameManager gameManager;
 
-    Vector3[] defaultPos; //Stores all the different initial positions of all the planets
+    public Vector3[] defaultPos; //Stores all the different initial positions of all the planets
     GameObject[] dupePlanetArr;
     GameObject dupePlanet;
 
@@ -20,7 +20,7 @@ public class PredictOrbit : MonoBehaviour
     }
 
     public void predictOrbit(){
-        Debug.Log("Predicting");
+        // Debug.Log("Predicting");
         dupePlanetArr = new GameObject[gameManager.body.Length];
 
         for (int i = 0; i < gameManager.body.Length; i++)
@@ -59,7 +59,7 @@ public class PredictOrbit : MonoBehaviour
     public void reset(){
         GameObject[] duplicateFind;
 
-        Debug.Log("reset");
+        // Debug.Log("reset");
         gameManager.trailSwitch = false;
 
         duplicateFind = new GameObject[GameObject.FindGameObjectsWithTag("Dupe").Length];
@@ -68,7 +68,18 @@ public class PredictOrbit : MonoBehaviour
         duplicateFind = GameObject.FindGameObjectsWithTag("Dupe");
 
         if(duplicateFind.Length == 0){
-            Debug.Log("No duplicates found.");
+            Debug.LogWarning("No duplicates found.");
+        }else{
+            for (int i = 0; i < dupePlanetArr.Length; i++)
+            {   
+                dupePlanetArr[i].gameObject.GetComponent<TrailRenderer>().enabled = false;
+                Destroy(dupePlanetArr[i].gameObject);
+
+                if(gameManager.body[i].gameObject.tag != "Dupe"){
+                    gameManager.body[i].transform.position = defaultPos[i];
+                    gameManager.body[i].gameObject.SetActive(true);
+                }
+            }
         }
     }
 }

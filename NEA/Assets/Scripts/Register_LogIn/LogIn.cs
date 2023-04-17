@@ -58,7 +58,7 @@ public class LogIn : MonoBehaviour
 
                 //Hash algorithm will retur the same hashed text if the original is the same
                 if(passToCompare == hash(password)){ 
-                    Debug.Log("Logged In");
+                    // Debug.Log("Logged In");
                     SceneManager.LoadScene("Simulation"); // Sends user to simulation once logged in
 
                 }else{

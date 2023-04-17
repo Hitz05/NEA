@@ -1,0 +1,40 @@
+username = ""
+password = ""
+
+message = ""
+
+InputField logUsername, logPassword
+
+prcedure Start:
+    message.color = white
+
+    createAcc.gameObject.SetActive(false); #Hides create account button
+endprocedure
+
+procedure Login:
+    username = logUsername
+    password = logPassword
+
+    fileName = hash(username) + ".txt";
+    filePath = "C:\\pAccounts\\" + fileName;
+
+    if password == "" then
+        print("Password cannot be empty")
+    endif
+
+    while password != "":
+        if File.Exists(filePath) then
+            passToCompare = File.ReadAllText(filePath) #Stores the password in the text file in a variable
+
+            if passToCompare == hash(password) then
+                SceneManager.LoadScene("Simulation")
+            else then   
+                message = "Password is incorrect"
+            endif
+        else then
+            message.color = red
+            message = "Account is not recognised, try again or an create account"
+            createAcc.gameObject.SetActive(true) # Shows create account button
+        endif
+    endwhile
+endprocedure

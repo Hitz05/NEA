@@ -146,7 +146,7 @@ public class Register_LogIn : MonoBehaviour
                 }
             }
 
-            Debug.Log(strengthScore);
+            // Debug.Log(strengthScore);
 
             while(strengthScore >= 0){
                 if(strengthScore > 4){

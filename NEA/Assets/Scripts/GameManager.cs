@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     public Slider timeflowSlider;
     public Text timeFlowTxT;
 
+    public PredictOrbit predictOrbit;
+
     void Awake(){
         timeFlow = 1;
 
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < body.Length; i++)
             {
                 body[i].GetComponent<BodyForce>().enabled = false;
+                body[i].transform.position = orbits.defaultPos[i];
             }
 
             predictButton.gameObject.SetActive(true);
@@ -137,7 +140,7 @@ public class GameManager : MonoBehaviour
     public void Start_Pause(){
         isPlaying = !isPlaying;
 
-        Debug.Log(isPlaying);
+        //Debug.Log(isPlaying);
     }
 
     public void predict(){
